@@ -1,0 +1,36 @@
+   ================
+   fde8ad3e51ae：是centos容器的id
+    关于windows Java客户端连接dockers  -》 centos -> kafka集群：
+    1:如果开机启动后发现查看zookeeper：get /brokers/ids/0  ： "endpoints":["PLAINTEXT://fde8ad3e51ae:9092"]
+    解决办法：a:在windowsd的hosts文件中加：127.0.0.1 fde8ad3e51ae  即可；
+    或者：
+              b:在Linux：vim /etc/hosts   --> 127.0.0.1       fde8ad3e51ae
+
+
+    2：如果开机启动后发现查看zookeeper：get /brokers/ids/0  ："endpoints":["PLAINTEXT://localhost:9092"],
+    则：192.168.1.117:9092,192.168.1.117:9093,192.168.1.117:9094 即可；
+
+
+
+    ====================================================================
+
+看zk:
+get /brokers/ids/0
+{"listener_security_protocol_map":{"PLAINTEXT":"PLAINTEXT"},"endpoints":["PLAINTEXT://localhost:9092"],"jmx_port":-1,"host":"localhost","timestamp":"1588136674639","port":9092,"version":4}
+下面是不对的：
+[zk: localhost:2181(CONNECTED) 10] get  /brokers/ids/0
+{"listener_security_protocol_map":{"PLAINTEXT":"PLAINTEXT"},"endpoints":["PLAINTEXT://7d5901113d64:9092"],"jmx_port":-1,"host":"7d5901113d64","timestamp":"1588136361989","port":9092,"version":4}
+
+
+7d5901113d64：是容器的id;  应该：vim /etc/hosts   --> 127.0.0.1       7d5901113d64
+
+而不是：127.0.0.1	localhost
+    ::1	localhost ip6-localhost ip6-loopback
+    fe00::0	ip6-localnet
+    ff00::0	ip6-mcastprefix
+    ff02::1	ip6-allnodes
+    ff02::2	ip6-allrouters
+    172.17.0.2	7d5901113d64
+
+
+docker创建centos容器时  放开9092  9093  9094 不能只开一个；

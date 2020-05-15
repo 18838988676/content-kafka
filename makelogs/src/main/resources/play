@@ -1,0 +1,28 @@
+1:效果：2个主题
+
+4个消费者组： 声明几个相同的组 该组就有几个线程！
+ID	Group	Topics	Node	Active Topics	Active Threads
+1	aa	2	localhost:9094
+2	bb	1	localhost:9093
+3	console01	1	localhost:9093
+4	console02	1	localhost:9092
+
+
+这是控制台：
+消费者： 组 console01 有3个线程；+
+ ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ordertopic --from-beginning --group console01
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ordertopic --from-beginning --group console01
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ordertopic --from-beginning --group console01
+
+
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ordertopic --from-beginning --group console02
+
+
+
+生产者：+ java com.cn.kafka01.testproduce.Produce.testKafkaSendMsg
+./kafka-console-producer.sh --bootstrap-server localhost:9092 --topic ordertopic
+./kafka-console-producer.sh --bootstrap-server localhost:9092 --topic ordertopic
+
+创建主题：
+./kafka-topics.sh --create --topic usertopic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3
+./kafka-topics.sh --create --topic ordertopic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3
