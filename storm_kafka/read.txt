@@ -1,0 +1,19 @@
+public class KafkaBolt extends BaseBasicBolt {
+      @Override
+      public voidexecute(Tuple input, BasicOutputCollector collector) {
+           System.out.println(input.getValues().get(4)+"消息接受bolt");
+      }
+      @Override
+      public voiddeclareOutputFields(OutputFieldsDeclarer declarer){
+      }
+}
+
+
+
+input获取到的值
+0索引代表kafka的topic
+1索引代表kafka的分区
+2索引代表kafka的偏移量
+3索引代表kafka的key值
+4索引代表kafka的value值
+=======================================================

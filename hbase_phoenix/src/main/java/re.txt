@@ -1,0 +1,73 @@
+create table "order"(
+id varchar primary key,
+name varchar
+);
+1:2个表
+create sequence nocurrentevasiondiv_firstdiv_seq
+
+
+总和：
+
+create table "sumprice" (sum  double,data date  );
+
+基本信息表：
+
+
+create sequence my_sequence start with 1 incremented by 1；#等价于：create sequence my_sequence;
+create table "orderinfo" (
+id  bigint not null primary key,
+userid integer  ,
+ordreid integer ,
+username varchar(50),
+goodsname varchar(50),
+ordertime date,
+allprice double ,
+time_stap date
+);
+
+
+
+例子：
+phoenix--hbase的jdbc驱动
+序列（sequence）是phoenix提供的允许产生单调递增数字的一个sql特性，序列会自动生成顺序递增的序列号，以实现自动提供唯一的主键值。
+使用create sequence语句建立序列的语法如下：
+create sequence <deq_name>
+[start with n]
+[increment by n]
+[minvalue n]
+[maxvalue n]
+[cycle]
+[cache n]
+语法结构：
+参数说明：
+sqe_name:序列名
+increment:可选子句，表示序列的增量，正数表示生成一个递增的序列，负数表示生成一个递减的序列，其默认值是1.
+minvalue:可选子句，决定序列生成的最小值
+maxvalue:可选子句，决定序列生成的最大值
+start:可选子句，指定序列的开始位置，默认递增序列的起始值为minvalue,递减序列的起始值为maxvalue.
+cache:可选子句，决定是否产生序列号预分配并存储在内存中。
+cycle:可选关键字，当序列达到最大值或者最小值时，可以继续复位下去；
+如果是递增系列达到maxvalue，它将又从minvalue继续递增，如果是递减系列达到minvalue，它将从maxvalue继续递减。
+如果忽略该关键，当其他达到最大值或者最小时仍继续递增/减时将会返回一个错误。
+
+创建默认序列，其增量为1
+create sequence my_sequence;
+创建一个最小值为1，最大值为10并且能复位的序列
+create sequence my_cycling_sequence minvalue 1 maxvalue 100 cycle;
+查询当前序列号
+select current for my_sequence;
+查询当前序列的下一个序列号
+select next value for my_sequence;
+（next value for返回当前序列的下一个序列号，curent value for返回当前序列号，注意：首次引用序列时，必须是next value for）
+使用upsert select语句，并为主键生成一个唯一的序列值
+upsert values into my_table(id, col1, col2)  values( next value for my_schema.my_sequence, 'foo', 'bar');
+通过current value for查询某表中某序列为该表分配的最后一个序列号
+select current value for my_sequence from my_tale;
+
+
+upsert  into "orderinfo" (id,userid,ordreid,username,goodsname,ordertime,allprice,time_stap)  values( next value for my_sequence,1, 1,'wmc','wmc22',now(),12.0,now());
+select * from "orderinfo";
+#主键冲突了，看到这里我们是不是可以改变一下思路，当插入已存在主键的记录时，将插入操作变为修改： on duplicate key update
+upsert  into "orderinfo" (id,userid,ordreid,username,goodsname,ordertime,allprice,time_stap)  values( 5,1, 1,'wmc','wmc22',now(),12.0,now()) on duplicate key update allprice = allprice + 199;
+
+

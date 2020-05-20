@@ -10,17 +10,17 @@ import org.apache.storm.topology.TopologyBuilder;
 public class MainTopology {
     public static void main(String[] args) throws Exception {
         TopologyBuilder builder = new TopologyBuilder();
-        KafkaSpoutConfig.Builder<String, String> kafkaBuilder = KafkaSpoutConfig.builder("192.168.1.117:9092", "flumetokafka");
+        KafkaSpoutConfig.Builder<String, String> kafkaBuilder = KafkaSpoutConfig.builder("192.168.1.120:9092", "haha");
         //设置kafka属于哪个组
-        kafkaBuilder.setGroupId("strom_group");
+        kafkaBuilder.setGroupId("strom_kafka");
         //创建kafkaspoutConfig
         KafkaSpoutConfig<String, String> build = kafkaBuilder.build();
         //通过kafkaspoutConfig获得kafkaspout
         KafkaSpout<String, String> kafkaSpout = new KafkaSpout<String,String>(build);
         //设置5个线程接收数据
-        builder.setSpout("kafkaSpout",kafkaSpout,2);
+        builder.setSpout("kafkaSpout",kafkaSpout,5);
         //设置2个线程处理数据
-        builder.setBolt("printBolt",new PrintBolt(),2).localOrShuffleGrouping("kafkaSpout");
+        builder.setBolt("printBolt",new PrintBolt(),3).localOrShuffleGrouping("kafkaSpout");
         Config config = new Config();
         config.setDebug(false);
         if (args.length>0){
