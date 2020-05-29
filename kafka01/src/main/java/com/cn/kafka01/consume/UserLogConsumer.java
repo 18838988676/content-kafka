@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class UserLogConsumer {
     private static int a=0;
-    @KafkaListener(topics = {"haha"},groupId = "test1223")
+    @KafkaListener(topics = {"realtime"},groupId = "test1223")
     public void consumer(ConsumerRecord<?,?> consumerRecord){
         //判断是否为null
         Optional<?> kafkaMessage = Optional.ofNullable(consumerRecord.value());

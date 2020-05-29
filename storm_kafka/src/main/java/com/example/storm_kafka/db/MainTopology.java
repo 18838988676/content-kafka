@@ -1,4 +1,4 @@
-package com.example.storm_kafka.centos;
+package com.example.storm_kafka.db;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
@@ -12,15 +12,15 @@ public class MainTopology {
         TopologyBuilder builder = new TopologyBuilder();
         KafkaSpoutConfig.Builder<String, String> kafkaBuilder = KafkaSpoutConfig.builder("192.168.1.108:9092", "wmc456");
         //设置kafka属于哪个组
-        kafkaBuilder.setGroupId("stormrealtime");
+        kafkaBuilder.setGroupId("strom_kafka");
         //创建kafkaspoutConfig
         KafkaSpoutConfig<String, String> build = kafkaBuilder.build();
         //通过kafkaspoutConfig获得kafkaspout
         KafkaSpout<String, String> kafkaSpout = new KafkaSpout<String,String>(build);
         //设置5个线程接收数据
-        builder.setSpout("realspout",kafkaSpout,5);
+        builder.setSpout("kafkaSpout",kafkaSpout,5);
         //设置2个线程处理数据
-        builder.setBolt("dbbolt",new PrintBolt(),3).localOrShuffleGrouping("realspout");
+        builder.setBolt("printBolt",new PrintBolt(),3).localOrShuffleGrouping("kafkaSpout");
         Config config = new Config();
         config.setDebug(false);
         if (args.length>0){
@@ -32,7 +32,7 @@ public class MainTopology {
             config.setNumWorkers(1);
             config.setNumEventLoggers(0);
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology("realSpoutT",config,builder.createTopology());
+            cluster.submitTopology("kafkaSpout",config,builder.createTopology());
         }
     }
 }
